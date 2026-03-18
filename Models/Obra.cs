@@ -12,9 +12,9 @@ namespace GaleriaArte.Models
         public string Estilo { get; set; }
         [StringLength(250)]
         public string UrlImagen { get; set; }
-        [ForeignKey("Artista")]
-        public string ArtistaId { get; set; }
 
         public Artista? Artista { get; set; }
+
+        public List<Exposicion> ExposicionesObra { get; set; }
     }
 }

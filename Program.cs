@@ -6,10 +6,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-var app = builder.Build();
 builder.Services.AddDbContext<GaleriaDbContext>(
     options => options.UseSqlServer(
-        builder.Configuration.GetConnectionString("GaleriaConnection")));
+    builder.Configuration.GetConnectionString("GaleriaConnection")
+    ));
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
