@@ -6,35 +6,23 @@
 
 <h1>Details</h1>
 
-<div>
-    <h4>Obra</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Titulo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Titulo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Estilo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Estilo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UrlImagen)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UrlImagen)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Artista)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Artista.Nombre)
-        </dd>
-    </dl>
+
+
+<div class="row row-cols-1 row-cols-md-2">
+    <div class="col">
+        <img src="@Model.UrlImagen" height="400" class="" />
+    </div>
+    <div class="col">
+        <h3>@Model.Titulo</h3>
+        <p>
+            Estilo: @Model.Estilo
+        </p>
+        <p>
+            Artista: @Model.Artista.Nombre
+            País: @Model.Artista.Pais
+        </p>
+        <a asp-controller="Exposicion" asp-action="Details" asp-route-id="@ViewBag.idExpo">Volver a la expo</a>
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
