@@ -12,6 +12,7 @@ namespace GaleriaArte.Models
         public string Estilo { get; set; }
         [StringLength(250)]
         public string UrlImagen { get; set; }
+        public Guid ArtistaID { get; set; }
 
         public Artista? Artista { get; set; }
 
