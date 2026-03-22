@@ -34,6 +34,7 @@ namespace GaleriaArte.Controllers
             }
 
             var exposicion = await _context.Exposiciones
+                .Include(e => e.ObrasExpuestas)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (exposicion == null)
             {
@@ -152,6 +153,34 @@ namespace GaleriaArte.Controllers
         private bool ExposicionExists(int id)
         {
             return _context.Exposiciones.Any(e => e.Id == id);
+        }
+        [HttpGet]
+        public async Task<IActionResult> SeleccionObras(int id)
+        {
+            ViewBag.idExpo = id;
+            var obras = await _context.Obras.ToListAsync();
+            return View(obras);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SeleccionObras(int expoId, List<Guid>obraIds)
+        {
+            var expo = _context.Exposiciones
+                .Include(e => e.ObrasExpuestas)
+                .FirstOrDefault(e => e.Id == expoId);
+
+            if (expo == null) return NotFound();
+
+            foreach(var id in obraIds)
+            {
+                var obra = new Obra { Id = id };
+                _context.Attach(obra);
+                if(expo.ObrasExpuestas == null) expo.ObrasExpuestas = new List<Obra>();
+                expo.ObrasExpuestas.Add(obra);
+            }
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
         }
     }
 }
