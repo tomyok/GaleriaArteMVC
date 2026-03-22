@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GaleriaArte.Models.Obra>
+﻿@model HomeViewModel
 
 @{
     ViewData["Title"] = "Obras";
@@ -9,16 +9,19 @@
 <p>
     <a asp-action="Create">Create New Obra</a>
 </p>
-<div class="row row-cols-1 row-cols-md-3 g-4">
-@foreach (var item in Model) {
-    <div class="col">
-        <div class="card" style="height: 400px">
-            <img src="@item.UrlImagen" class="card-img-top img-fluid h-50 object-fit-cover" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">@item.Titulo</h5>
-                <p class="card-text">Artista: @item.Artista.Nombre</p>
-                <a asp-action="Details" asp-route-id="@item.Id" >Detalle</a>
-            </div>
+
+@await Html.PartialAsync("_CarruselObras", Model.Obras)
+
+@foreach (var expo in Model.Exposiciones)
+{
+    <div class="card">
+        <div class="card-header">
+            @expo.Nombre
+        </div>
+        <div class="card-body">
+            <p class="card-text">@expo.FechaInicio</p>
+            <p class="card-text">@expo.FechaFin</p>
+            <a asp-controller="Exposiciones" asp-action="Details" apr-route-id="@expo.Id" class="btn btn-primary">Ver Exposicion</a>
         </div>
     </div>
 }
