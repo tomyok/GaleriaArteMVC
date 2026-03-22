@@ -35,13 +35,14 @@ namespace GaleriaArte.Controllers
         }
 
         // GET: Obras/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(Guid? id, int? idExpo)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
+            ViewBag.idExpo = idExpo;
             var obra = await _context.Obras
                 .Include(o => o.Artista)
                 .FirstOrDefaultAsync(m => m.Id == id);

@@ -30,6 +30,9 @@
         </dd>
     </dl>
 </div>
+
+@await Html.PartialAsync("_ObrasExpuestas", Model)
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
@@ -47,6 +50,7 @@ else
             <tr>
                 <th>Titulo</th>
                 <th>Imagen</th>
+                <th>Eliminar Obra</th>
             </tr>
         </thead>
         <tbody>
@@ -55,6 +59,7 @@ else
                 <tr>
                     <td>@obra.Titulo</td>
                     <td><img src="@obra.UrlImagen" height="50" /></td>
+                    <td><a asp-action="QuitarObra" asp-route-idExpo="@Model.Id" asp-route-idObra="@obra.Id" class="btn btn-outline-danger">Eliminar</a></td>
                 </tr>
             }
 

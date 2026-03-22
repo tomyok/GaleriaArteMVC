@@ -19,9 +19,11 @@
         </p>
         <p>
             Artista: @Model.Artista.Nombre
+        </p>
+        <p>
             País: @Model.Artista.Pais
         </p>
-        <a asp-controller="Exposicion" asp-action="Details" asp-route-id="@ViewBag.idExpo">Volver a la expo</a>
+        <a asp-controller="Exposiciones" asp-action="Details" asp-route-id="@ViewBag.idExpo">Volver a la expo</a>
     </div>
 </div>
 <div>
