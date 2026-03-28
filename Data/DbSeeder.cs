@@ -1,4 +1,5 @@
 ﻿using GaleriaArte.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace GaleriaArte.Data
 {
@@ -166,6 +167,49 @@ namespace GaleriaArte.Data
             context.SaveChanges();
 
 
+        }
+        public static async Task SeedUsers(
+        UserManager<IdentityUser> userManager,
+        RoleManager<IdentityRole> roleManager)
+        {
+            // Crear rol Admin
+            if (!await roleManager.RoleExistsAsync("Admin"))
+            {
+                await roleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+
+            // Admin
+            var adminEmail = "admin@correo.com";
+
+            var admin = await userManager.FindByEmailAsync(adminEmail);
+
+            if (admin == null)
+            {
+                admin = new IdentityUser
+                {
+                    UserName = adminEmail,
+                    Email = adminEmail
+                };
+
+                await userManager.CreateAsync(admin, "Admin123!");
+                await userManager.AddToRoleAsync(admin, "Admin");
+            }
+
+            // Usuario normal
+            var userEmail = "user@correo.com";
+
+            var user = await userManager.FindByEmailAsync(userEmail);
+
+            if (user == null)
+            {
+                user = new IdentityUser
+                {
+                    UserName = userEmail,
+                    Email = userEmail
+                };
+
+                await userManager.CreateAsync(user, "User123!");
+            }
         }
     }
 }

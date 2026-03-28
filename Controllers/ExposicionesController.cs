@@ -8,9 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using GaleriaArte.Data;
 using GaleriaArte.Models;
 using System.Reflection.Metadata.Ecma335;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GaleriaArte.Controllers
 {
+    [Authorize]
     public class ExposicionesController : Controller
     {
         private readonly GaleriaDbContext _context;
@@ -27,7 +30,7 @@ namespace GaleriaArte.Controllers
         }
 
         // GET: Exposiciones/Details/5
-        public async Task<IActionResult> Details(string? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -36,7 +39,7 @@ namespace GaleriaArte.Controllers
 
             var exposicion = await _context.Exposiciones
                 .Include(e => e.ObrasExpuestas)
-                .FirstOrDefaultAsync(m => m.Id.ToString() == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (exposicion == null)
             {
                 return NotFound();
@@ -44,7 +47,7 @@ namespace GaleriaArte.Controllers
 
             return View(exposicion);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Exposiciones/Create
         public IActionResult Create()
         {
@@ -54,6 +57,7 @@ namespace GaleriaArte.Controllers
         // POST: Exposiciones/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nombre,FechaInicio,FechaFin")] Exposicion exposicion)
@@ -66,7 +70,7 @@ namespace GaleriaArte.Controllers
             }
             return View(exposicion);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Exposiciones/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -86,6 +90,7 @@ namespace GaleriaArte.Controllers
         // POST: Exposiciones/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,FechaInicio,FechaFin")] Exposicion exposicion)
@@ -119,6 +124,7 @@ namespace GaleriaArte.Controllers
         }
 
         // GET: Exposiciones/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -135,7 +141,7 @@ namespace GaleriaArte.Controllers
 
             return View(exposicion);
         }
-
+        [Authorize(Roles = "Admin")]
         // POST: Exposiciones/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -155,6 +161,7 @@ namespace GaleriaArte.Controllers
         {
             return _context.Exposiciones.Any(e => e.Id == id);
         }
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> SeleccionObras(int id)
         {
@@ -164,7 +171,7 @@ namespace GaleriaArte.Controllers
                 .ToListAsync();
             return View(obras);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> SeleccionObras(int expoId, List<Guid> obraIds)
         {
@@ -185,7 +192,7 @@ namespace GaleriaArte.Controllers
 
             return RedirectToAction("Index");
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> QuitarObra(int idExpo, Guid idObra)
         {
             var expo = await _context.Exposiciones

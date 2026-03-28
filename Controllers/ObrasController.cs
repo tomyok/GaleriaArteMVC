@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GaleriaArte.Data;
 using GaleriaArte.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GaleriaArte.Controllers
 {
+    [Authorize]
     public class ObrasController : Controller
     {
         private readonly GaleriaDbContext _context;

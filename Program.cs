@@ -1,4 +1,5 @@
 using GaleriaArte.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,13 +11,38 @@ builder.Services.AddDbContext<GaleriaDbContext>(
     options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("GaleriaConnection")
     ));
+
+builder.Services
+    .AddIdentity<IdentityUser, IdentityRole>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = false;
+        options.Password.RequireNonAlphanumeric = false;
+    })
+    .AddEntityFrameworkStores<GaleriaDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(o =>
+{
+    o.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    o.SlidingExpiration = true;
+    o.LoginPath = "/Identity/Account/Login";
+    o.AccessDeniedPath = "/Identity/Account/AccessDenied";
+});
+
+builder.Services.AddRazorPages();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+
     var context = services.GetRequiredService<GaleriaDbContext>();
-    DbSeeder.Seed(context);
+    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+    DbSeeder.Seed(context); //  datos normales
+    await DbSeeder.SeedUsers(userManager, roleManager); //  usuarios
 }
 
 // Configure the HTTP request pipeline.
@@ -30,6 +56,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
@@ -39,5 +66,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-
+app.MapRazorPages();
 app.Run();
